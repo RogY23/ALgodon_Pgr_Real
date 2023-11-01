@@ -68,6 +68,7 @@ function BuscarEjercicios() {
             )}
           </TableBody>
         </Table>
+        
       </TableContainer>
     </div>
   );
