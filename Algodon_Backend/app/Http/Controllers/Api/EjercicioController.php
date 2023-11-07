@@ -55,14 +55,6 @@ class EjercicioController extends Controller {
         return $ejercicio;
     }
 
-    public function search($textoBuscar) {
 
-        $query = $textoBuscar;
 
-        $ejercicios = Ejercicio::where('titulo', 'like', "%{$query}%")
-                      ->orWhere('enunciado', 'like', "%{$query}%")
-                      ->get();
-
-        return $ejercicios;
-      }
 }

@@ -1,7 +1,8 @@
-import { Button, Input, InputBase, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Button, InputBase, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
 
 const endpoint = "http://127.0.0.1:8000/api/";
 
@@ -11,18 +12,31 @@ function BuscarEjercicios() {
     const [ejercicios, setEjercicios] = useState([]);
     
 
-
-    
-    const handleClick = async () => 
-    {
-      const respuesta = await axios.get(`${endpoint}Ejercicios/search/${texto}`)
+    const showData = async () => {
+      const respuesta = await axios.get(`${endpoint}Ejercicios`)
       setEjercicios(respuesta.data)
     };
+    useEffect(()=>{
+      showData()
+    },[])
 
     const handleChange = (e) => {
-      setTexto(e.target.value);
-      handleClick()
+      setTexto(e.target.value)
     };
+
+
+    
+    let results = [];
+    if(!texto){
+      results = ejercicios
+    }else{
+      results = ejercicios.filter((dato)=>{
+        const alldato = dato.titulo + dato.enunciado;
+        return alldato.toLowerCase().includes(texto.toLowerCase());
+      })
+    }
+
+
 
   return (
     <div>
@@ -32,8 +46,6 @@ function BuscarEjercicios() {
         placeholder="Mensaje"
         onChange={handleChange}
       />
-      <Button onClick={handleClick}>Buscar</Button>
-
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -45,8 +57,8 @@ function BuscarEjercicios() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {ejercicios.length > 0 ? (
-              ejercicios.map((ejercicio) => (
+            {results.length > 0 ? (
+              results.map((ejercicio) => (
                 <TableRow key={ejercicio.id}>
                   <TableCell align="right">{ejercicio.titulo}</TableCell>
                   <TableCell align="right">{ejercicio.enunciado}</TableCell>
